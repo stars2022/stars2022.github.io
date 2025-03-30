@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI组件演示</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: all 0.3s ease;
+      color: #333;
+      overflow-x: hidden;
+    }
+    
+    .header {
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      transition: all 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .section {
+      margin-bottom: 30px;
+    }
+    
+    .section-title {
+      margin-bottom: 15px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    
+    .controls-panel {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+    
+    .demo-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .interaction-area {
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+    
+    .code {
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .notification-console {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      min-height: 100px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    
+    .separator {
+      width: 100%;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+    }
+  </style>
+  <!-- 引入自定义组件 -->
+  <script src="custom-switch.js"></script>
+  <script src="custom-card.js"></script>
+  <script src="custom-button.js"></script>
+  <script src="custom-notification.js"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>自定义UI组件演示</h1>
+  </div>
+  
+  <div class="container">
+    <!-- 开关组件展示区 -->
+    <div class="section">
+      <custom-card title="开关组件" theme="light" variant="blur">
+        <div class="demo-group">
+          <custom-switch id="demoSwitch1" label="基本开关" theme="light" variant="blur"></custom-switch>
+          <custom-switch id="demoSwitch2" label="预设为开启" checked theme="light" variant="blur"></custom-switch>
+          <custom-switch id="demoSwitch3" label="禁用状态" disabled theme="light" variant="blur"></custom-switch>
+          
+          <div class="interaction-area">
+            <div class="section-title">开关状态</div>
+            <div id="switchConsole" class="notification-console"></div>
+          </div>
+        </div>
+      </custom-card>
+    </div>
+    
+    <!-- 按钮组件展示区 -->
+    <div class="section">
+      <custom-card title="按钮组件" theme="light" variant="blur">
+        <div class="demo-group">
+          <custom-button id="basicBtn" text="基本按钮" theme="light" variant="blur"></custom-button>
+          <custom-button id="disabledBtn" text="禁用按钮" disabled theme="light" variant="blur"></custom-button>
+          <div class="row">
+            <custom-button id="countBtn" text="点击计数: 0" theme="light" variant="blur"></custom-button>
+            <custom-button id="resetCountBtn" text="重置" theme="light" variant="blur"></custom-button>
+          </div>
+          
+          <div class="interaction-area">
+            <div class="section-title">按钮交互</div>
+            <div id="buttonConsole" class="notification-console"></div>
+          </div>
+        </div>
+      </custom-card>
+    </div>
+    
+    <!-- 通知组件展示区 -->
+    <div class="section">
+      <custom-card title="通知组件" theme="light" variant="blur">
+        <div class="demo-group">
+          <custom-button id="infoNotifyBtn" text="信息通知" theme="light" variant="blur"></custom-button>
+          <custom-button id="successNotifyBtn" text="成功通知" theme="light" variant="blur"></custom-button>
+          <custom-button id="warningNotifyBtn" text="警告通知" theme="light" variant="blur"></custom-button>
+          <custom-button id="errorNotifyBtn" text="错误通知" theme="light" variant="blur"></custom-button>
+          <custom-button id="longNotifyBtn" text="长时间通知 (10秒)" theme="light" variant="blur"></custom-button>
+          
+          <div class="interaction-area">
+            <div class="section-title">展示多个通知</div>
+            <custom-button id="multipleNotifyBtn" text="显示多个通知" theme="light" variant="blur"></custom-button>
+          </div>
+        </div>
+      </custom-card>
+    </div>
+    
+    <!-- 主题和性能组合展示区 -->
+    <div class="section">
+      <custom-card title="主题与性能模式组合" theme="light" variant="blur">
+        <div class="demo-group">
+          <div class="section-title">组件状态矩阵</div>
+          
+          <div class="row">
+            <span>亮色 + 模糊:</span>
+            <custom-switch id="matrix1" theme="light" variant="blur"></custom-switch>
+          </div>
+          
+          <div class="row">
+            <span>亮色 + 高性能:</span>
+            <custom-switch id="matrix2" theme="light" variant="performance"></custom-switch>
+          </div>
+          
+          <div class="row">
+            <span>暗色 + 模糊:</span>
+            <custom-switch id="matrix3" theme="dark" variant="blur"></custom-switch>
+          </div>
+          
+          <div class="row">
+            <span>暗色 + 高性能:</span>
+            <custom-switch id="matrix4" theme="dark" variant="performance"></custom-switch>
+          </div>
+          
+          <div class="separator"></div>
+          
+          <div class="row">
+            <span>当前应用主题:</span>
+            <span id="currentTheme" class="code">light</span>
+          </div>
+          
+          <div class="row">
+            <span>当前性能模式:</span>
+            <span id="currentPerformance" class="code">blur</span>
+          </div>
+        </div>
+      </custom-card>
+    </div>
+    
+    <!-- 原神小组件 -->
+    <div class="section">
+      <custom-card title="原神启动器" theme="light" variant="blur">
+        <div class="demo-group">
+          <div class="row">
+            <span>是否启动原神</span>
+            <custom-switch id="genshinSwitch" theme="light" variant="blur"></custom-switch>
+          </div>
+          
+          <div class="interaction-area" id="genshinArea">
+            <div class="section-title">原神状态</div>
+            <p id="genshinStatus">原神未启动</p>
+            <custom-button id="genshinActionBtn" text="启动原神" theme="light" variant="blur"></custom-button>
+          </div>
+        </div>
+      </custom-card>
+    </div>
+  </div>
+  
+  <!-- 控制面板 -->
+  <div class="controls-panel">
+    <custom-button id="toggleThemeBtn" text="切换到暗色模式" theme="light" variant="blur"></custom-button>
+    <custom-button id="togglePerformanceBtn" text="切换到高性能模式" theme="light" variant="blur"></custom-button>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 设置背景图片
+      document.body.style.backgroundImage = "url('/Users/stars/Downloads/71E52E60F9C3FC963C96B000AB5BE0461.jpg')";
+      document.body.style.backgroundColor = "#f5f5f5";
+      
+      // 状态变量
+      let isDarkMode = false;
+      let isPerformanceMode = false;
+      let clickCounter = 0;
+      
+      // 获取元素引用
+      const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+      const togglePerformanceBtn = document.getElementById('togglePerformanceBtn');
+      const currentTheme = document.getElementById('currentTheme');
+      const currentPerformance = document.getElementById('currentPerformance');
+      const switchConsole = document.getElementById('switchConsole');
+      const buttonConsole = document.getElementById('buttonConsole');
+      const countBtn = document.getElementById('countBtn');
+      const resetCountBtn = document.getElementById('resetCountBtn');
+      const genshinSwitch = document.getElementById('genshinSwitch');
+      const genshinStatus = document.getElementById('genshinStatus');
+      const genshinActionBtn = document.getElementById('genshinActionBtn');
+      
+      // 辅助函数 - 记录事件到控制台
+      function logToConsole(consoleElem, message) {
+        const time = new Date().toLocaleTimeString();
+        const logItem = document.createElement('div');
+        logItem.textContent = `[${time}] ${message}`;
+        consoleElem.appendChild(logItem);
+        consoleElem.scrollTop = consoleElem.scrollHeight;
+        
+        // 保持控制台记录数量合理
+        while (consoleElem.children.length > 20) {
+          consoleElem.removeChild(consoleElem.firstChild);
+        }
+      }
+      
+      // 开关组件事件处理
+      const demoSwitches = ['demoSwitch1', 'demoSwitch2', 'demoSwitch3'];
+      demoSwitches.forEach(id => {
+        const switchElem = document.getElementById(id);
+        if (switchElem) {
+          switchElem.addEventListener('change', (e) => {
+            logToConsole(switchConsole, `${id}: ${e.detail.checked ? '开启' : '关闭'}`);
+          });
+        }
+      });
+      
+      // 修复: 添加标志位，防止事件冒泡导致重复触发
+      let isProcessingClickEvent = false;
+      
+      // 按钮点击计数 - 添加检查防止重复触发
+      countBtn.addEventListener('click', (event) => {
+        // 防止重复处理同一个事件
+        if (isProcessingClickEvent) return;
+        isProcessingClickEvent = true;
+        
+        // 增加计数并更新显示
+        clickCounter++;
+        countBtn.setAttribute('text', `点击计数: ${clickCounter}`);
+        logToConsole(buttonConsole, `按钮被点击，当前计数: ${clickCounter}`);
+        
+        // 重置标志位，允许处理下一个事件
+        setTimeout(() => {
+          isProcessingClickEvent = false;
+        }, 10);
+      });
+      
+      resetCountBtn.addEventListener('click', () => {
+        clickCounter = 0;
+        countBtn.setAttribute('text', `点击计数: ${clickCounter}`);
+        logToConsole(buttonConsole, `计数已重置`);
+      });
+      
+      document.getElementById('basicBtn').addEventListener('click', () => {
+        logToConsole(buttonConsole, '基本按钮被点击');
+      });
+      
+      // 通知组件演示
+      document.getElementById('infoNotifyBtn').addEventListener('click', () => {
+        CustomNotification.show({
+          message: '这是一条信息通知',
+          type: 'info',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 3000
+        });
+      });
+      
+      document.getElementById('successNotifyBtn').addEventListener('click', () => {
+        CustomNotification.show({
+          message: '操作成功完成！',
+          type: 'success',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 3000
+        });
+      });
+      
+      document.getElementById('warningNotifyBtn').addEventListener('click', () => {
+        CustomNotification.show({
+          message: '请注意，这是一个警告信息',
+          type: 'warning',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 3000
+        });
+      });
+      
+      document.getElementById('errorNotifyBtn').addEventListener('click', () => {
+        CustomNotification.show({
+          message: '出现错误，请稍后重试',
+          type: 'error',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 3000
+        });
+      });
+      
+      document.getElementById('longNotifyBtn').addEventListener('click', () => {
+        CustomNotification.show({
+          message: '这是一条显示10秒的长通知，你可以手动关闭它',
+          type: 'info',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 10000
+        });
+      });
+      
+      document.getElementById('multipleNotifyBtn').addEventListener('click', () => {
+        // 显示多个通知来测试自动下移功能
+        ['info', 'success', 'warning', 'error'].forEach((type, index) => {
+          setTimeout(() => {
+            CustomNotification.show({
+              message: `这是第 ${index+1} 条通知，类型为 ${type}`,
+              type: type,
+              variant: isPerformanceMode ? 'performance' : 'blur',
+              theme: isDarkMode ? 'dark' : 'light',
+              duration: 5000
+            });
+          }, index * 400); // 错开显示时间
+        });
+      });
+      
+      // 原神启动器
+      genshinSwitch.addEventListener('change', (e) => {
+        const isGenshinRunning = e.detail.checked;
+        genshinStatus.textContent = isGenshinRunning ? '原神正在运行中' : '原神未启动';
+        genshinActionBtn.setAttribute('text', isGenshinRunning ? '关闭原神' : '启动原神');
+        
+        const notifyType = isGenshinRunning ? 'success' : 'info';
+        const notifyMsg = isGenshinRunning ? '原神已成功启动！' : '原神已关闭';
+        
+        CustomNotification.show({
+          message: notifyMsg,
+          type: notifyType,
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 2000
+        });
+      });
+      
+      genshinActionBtn.addEventListener('click', () => {
+        genshinSwitch.checked = !genshinSwitch.checked;
+      });
+      
+      // 主题切换功能
+      toggleThemeBtn.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        applyTheme();
+        toggleThemeBtn.setAttribute('text', isDarkMode ? '切换到亮色模式' : '切换到暗色模式');
+        currentTheme.textContent = isDarkMode ? 'dark' : 'light';
+        
+        // 显示通知
+        CustomNotification.show({
+          message: `已切换到${isDarkMode ? '暗色' : '亮色'}主题`,
+          type: 'info',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 2000
+        });
+      });
+      
+      // 性能模式切换
+      togglePerformanceBtn.addEventListener('click', () => {
+        isPerformanceMode = !isPerformanceMode;
+        applyPerformanceMode();
+        togglePerformanceBtn.setAttribute('text', isPerformanceMode ? '切换到模糊模式' : '切换到高性能模式');
+        currentPerformance.textContent = isPerformanceMode ? 'performance' : 'blur';
+        
+        // 显示通知
+        CustomNotification.show({
+          message: `已切换到${isPerformanceMode ? '高性能' : '模糊'}模式`,
+          type: 'info',
+          variant: isPerformanceMode ? 'performance' : 'blur',
+          theme: isDarkMode ? 'dark' : 'light',
+          duration: 2000
+        });
+      });
+      
+      // 应用主题
+      function applyTheme() {
+        const theme = isDarkMode ? 'dark' : 'light';
+        
+        // 更新所有组件的主题
+        document.querySelectorAll('custom-card, custom-switch, custom-button').forEach(elem => {
+          elem.setAttribute('theme', theme);
+        });
+        
+        // 更新页面样式
+        if (isDarkMode) {
+          document.body.style.backgroundColor = 'rgba(18, 18, 18, 0.8)';
+          document.body.style.color = '#ffffff';
+          
+          // 在非高性能模式下应用模糊效果
+          if (!isPerformanceMode) {
+            document.body.style.backdropFilter = 'blur(10px)';
+            document.body.style.webkitBackdropFilter = 'blur(10px)';
+          }
+        } else {
+          document.body.style.backgroundColor = '#f5f5f5';
+          document.body.style.color = '#333333';
+          
+          document.body.style.backdropFilter = 'none';
+          document.body.style.webkitBackdropFilter = 'none';
+        }
+      }
+      
+      // 应用性能模式
+      function applyPerformanceMode() {
+        const variant = isPerformanceMode ? 'performance' : 'blur';
+        
+        // 更新所有组件的变体属性
+        document.querySelectorAll('custom-card, custom-switch, custom-button').forEach(elem => {
+          elem.setAttribute('variant', variant);
+        });
+        
+        // 控制模糊效果
+        if (isPerformanceMode) {
+          // 高性能模式下关闭模糊效果
+          document.body.style.backdropFilter = 'none';
+          document.body.style.webkitBackdropFilter = 'none';
+        } else if (isDarkMode) {
+          // 仅在非高性能且暗色模式下应用模糊
+          document.body.style.backdropFilter = 'blur(10px)';
+          document.body.style.webkitBackdropFilter = 'blur(10px)';
+        }
+      }
+      
+      // 初始化界面
+      setTimeout(() => {
+        applyTheme();
+        applyPerformanceMode();
+        console.log('界面初始化完成');
+      }, 100);
+    });
+  </script>
+</body>
+</html>
