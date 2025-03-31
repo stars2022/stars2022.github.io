@@ -84,8 +84,7 @@ class CardElement extends HTMLElement {
         }
         .card {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
+          flex-direction: column;
           width: 300px;
           padding: 20px;
           border-radius: 15px;
@@ -128,6 +127,14 @@ class CardElement extends HTMLElement {
         .card-title {
           font-weight: 500;
           font-size: 16px;
+          margin-bottom: 15px;
+        }
+        
+        .card-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
         }
         
         ::slotted(*) {
@@ -136,7 +143,9 @@ class CardElement extends HTMLElement {
       </style>
       <div class="card variant-${this._variant} theme-${this._theme}" part="card">
         <span class="card-title">${this._title}</span>
-        <slot></slot>
+        <div class="card-content">
+          <slot></slot>
+        </div>
       </div>
     `;
   }

@@ -125,10 +125,33 @@ class CustomSwitch extends HTMLElement {
     // 基于当前的variant和theme组合应用适当的样式
     if (this._variant === 'performance') {
       // 高性能模式：不使用模糊和复杂光效
-      if (this._checked) {
-        switchElement.style.background = 'linear-gradient(145deg,#5ECB71, #5ECB71)';
+      if (this._theme === 'light') {
+        if (this._checked) {
+          switchElement.style.background = 'linear-gradient(145deg,#5ECB71, #5ECB71)';
+        } else {
+          switchElement.style.background = 'linear-gradient(145deg,#E3E3E3, #E3E3E3)';
+        }
+        
+        if (this._disabled) {
+          switchElement.style.opacity = '0.6';
+          switchElement.style.background = this._checked ? 
+            'linear-gradient(145deg,#a9d9b3, #a9d9b3)' : 
+            'linear-gradient(145deg,#cccccc, #cccccc)';
+        }
       } else {
-        switchElement.style.background = 'linear-gradient(145deg,#E3E3E3, #E3E3E3)';
+        // 暗色主题下的高性能模式
+        if (this._checked) {
+          switchElement.style.background = 'linear-gradient(145deg,#005bb9, #008f45)';
+        } else {
+          switchElement.style.background = 'linear-gradient(145deg,#222222, #333333)';
+        }
+        
+        if (this._disabled) {
+          switchElement.style.opacity = '0.7';
+          switchElement.style.background = this._checked ? 
+            'linear-gradient(145deg,#003b76, #00582c)' : 
+            'linear-gradient(145deg,#1a1a1a, #282828)';
+        }
       }
       
       slider.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
