@@ -10,7 +10,7 @@ class CustomNotification extends HTMLElement {
     
     // Initial state
     this._message = this.getAttribute('message') || '通知消息';
-    this._duration = parseInt(this.getAttribute('duration') || '3000', 10);
+    this._duration = parseInt(this.getAttribute('duration') || '5000', 10);
     this._variant = this.getAttribute('variant') || 'blur'; // blur 或 performance
     this._theme = this.getAttribute('theme') || 'light'; // light 或 dark
     this._type = this.getAttribute('type') || 'info'; // info, success, warning, error
@@ -164,13 +164,15 @@ class CustomNotification extends HTMLElement {
       this._timeoutId = null;
     }
     
-    // 更新样式，触发淡出效果
+    // 更新样式，触发退出动画
     const notification = this.shadowRoot.querySelector('.notification');
     if (notification) {
+      // 移除visible类并添加closing类以应用退出动画
       notification.classList.remove('visible');
+      notification.classList.add('closing');
       
       // 动画结束后移除元素
-      notification.addEventListener('transitionend', () => {
+      notification.addEventListener('animationend', () => {
         // 从活动通知列表中移除
         const index = CustomNotification.activeNotifications.indexOf(this);
         if (index > -1) {
@@ -195,7 +197,7 @@ class CustomNotification extends HTMLElement {
     const index = CustomNotification.activeNotifications.indexOf(this);
     if (index > -1) {
       const offset = index * (notification.offsetHeight + CustomNotification.NOTIFICATION_GAP);
-      notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease, top 0.3s ease';
+      notification.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out, top 0.3s ease-out';
       notification.style.top = `${offset}px`;
     }
   }
@@ -253,21 +255,34 @@ class CustomNotification extends HTMLElement {
           min-width: 280px;
           max-width: 350px;
           padding: 16px;
-          border-radius: 8px;
+          border-radius: 15px;
           margin-top: 20px;
-          transform: translateX(120%);
-          transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease;
+          transform: translateX(120%) scale(0.8);
           opacity: 0;
           pointer-events: all;
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          will-change: transform, opacity, top;
+        }
+        
+        @keyframes notification-enter {
+          0% { transform: translateX(120%) scale(0.8); opacity: 0; }
+          100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        
+        @keyframes notification-exit {
+          0% { transform: translateX(0) scale(1); opacity: 1; }
+          100% { transform: translateX(120%) scale(0.8); opacity: 0; }
         }
         
         .notification.visible {
-          transform: translateX(0);
-          opacity: 1;
+          animation: notification-enter 0.3s ease-out forwards;
+        }
+        
+        .notification.closing {
+          animation: notification-exit 0.3s ease-in forwards;
         }
         
         .notification-content {
@@ -281,31 +296,57 @@ class CustomNotification extends HTMLElement {
         }
         
         .notification-close {
-          background: none;
+          position: absolute;
+          top: -6px;
+          left: -8px;
+          background:rgb(154, 155, 156);
           border: none;
+          border-radius: 50%;
           cursor: pointer;
           padding: 0;
-          margin-left: 10px;
           width: 20px;
           height: 20px;
           display: flex;
           align-items: center;
           justify-content: center;
-          opacity: 0.6;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          opacity: 0;
+          z-index: 2;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
-        .notification-close:hover {
+        .notification:hover .notification-close {
           opacity: 1;
+        }
+        
+        .notification.theme-dark .notification-close {
+          background:rgba(43, 44, 44, 0.98);
+          border: 1px solid rgba(70, 70, 70, 0.5);
+        }
+
+        .notification.theme-light .notification-close {
+          background:rgb(255, 255, 255);
+          border: 1px solid rgba(255, 255, 255, 0.8);
         }
         
         .notification-close::before,
         .notification-close::after {
           content: '';
           position: absolute;
-          width: 12px;
-          height: 2px;
-          background-color: currentColor;
+          width: 10px;
+          height: 1.5px;
+        }
+        
+        /* 亮色主题下叉号为深色 */
+        .notification.theme-light .notification-close::before,
+        .notification.theme-light .notification-close::after {
+          background-color: #939394;
+        }
+        
+        /* 暗色主题下叉号为浅色 */
+        .notification.theme-dark .notification-close::before,
+        .notification.theme-dark .notification-close::after {
+          background-color: #7F8080;
         }
         
         .notification-close::before {
@@ -323,13 +364,14 @@ class CustomNotification extends HTMLElement {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
-        /* 亮色主题 - 模糊模式 */
+        /* 亮色主题 - 毛玻璃模式 */
         .notification.theme-light.variant-blur {
-          background: rgba(255, 255, 255, 0.8);
+          background:rgba(255, 255, 255, 0.75);
           color: #333333;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.8);
         }
         
         /* 暗色主题 - 高性能模式 */
@@ -339,13 +381,14 @@ class CustomNotification extends HTMLElement {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
-        /* 暗色主题 - 模糊模式 */
+        /* 暗色主题 - 毛玻璃模式 */
         .notification.theme-dark.variant-blur {
-          background: rgba(40, 40, 40, 0.8);
+          background: rgba(44, 45, 46, 0.75);
           color: #ffffff;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(70, 70, 70, 0.5);
         }
         
         /* 通知类型样式 */
