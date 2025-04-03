@@ -333,8 +333,8 @@ class CustomNotification extends HTMLElement {
         .notification-close::after {
           content: '';
           position: absolute;
-          width: 10px;
-          height: 1.5px;
+          width: 9.5px;
+          height: 1.2px;
         }
         
         /* 亮色主题下叉号为深色 */
@@ -371,14 +371,14 @@ class CustomNotification extends HTMLElement {
           backdrop-filter: blur(15px);
           -webkit-backdrop-filter: blur(15px);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.8);
+          border: 1px solid rgba(224, 225, 225, 0.9);
         }
         
         /* 暗色主题 - 高性能模式 */
         .notification.theme-dark.variant-performance {
           background-color: #333333;
           color: #ffffff;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         /* 暗色主题 - 毛玻璃模式 */
